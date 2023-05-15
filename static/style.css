@@ -1,0 +1,46 @@
+:root {
+  font-size: 18px;
+}
+* {
+  box-sizing: border-box;
+  font-family: monospace;
+}
+body {
+  padding: 1rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  font-size: 1rem;
+}
+
+img, canvas {
+  max-width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+p, ul {
+  font-size: 1rem;
+}
+
+a:link,
+a:hover,
+a:active {
+  color: black;
+}
+
+a:visited {
+  color: red;
+}
+
+
+#cover {
+  text-align: center;
+}
