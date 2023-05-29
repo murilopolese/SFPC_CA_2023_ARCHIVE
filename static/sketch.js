@@ -1,54 +1,73 @@
-let grid = []
+const emptyGrid = []
 const rows = columns = 60;
+
+let grid = []
+
 let when = [
   [null, null, null],
   [null, null, null],
   [null, null, null]
 ]
-
 let then = [
   [null, null, null],
   [null, null, null],
   [null, null, null]
 ]
 
+// reset grid
+for (let y = 0; y < rows; y++) {
+  emptyGrid[y] = []
+  for (let x = 0; x < columns; x++) {
+    emptyGrid[y][x] = 0
+  }
+}
 
 function setup() {
-  createCanvas(800, 600);
+  grid = copyArray(emptyGrid)
+  seed_grid()
+  reset_rules()
 
-  reset()
+
+  createCanvas(800, 600);
   noStroke()
-  frameRate(24)
+  frameRate(18)
 
 }
 
 function draw() {
   background(255);
 
+  const new_grid = applyRule({
+    when: when,
+    then: then
+  })
+  const change = diffArrays(grid, new_grid)
+
+  // Draw grid
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < columns; x++) {
-      let px = map(x, 0, columns-1, width*0.1, width*0.9)
-      let py = map(y, 0, rows-1, height*0.1, height*0.9)
+      let px = map(x, 0, columns-1, width*0.2, width*0.8)
+      let py = map(y, 0, rows-1, height*0.2, height*0.8)
       if (grid[y][x] === 1) {
         fill(0)
       } else {
         fill(255)
       }
-      rect(px, py, (width*0.85)/columns, (height*0.85)/rows)
+      if (change[y][x] == 1) {
+        fill(255, 0, 0)
+      }
+      rect(px, py, (width*0.65)/columns, (height*0.65)/rows)
     }
   }
 
-  new_grid = applyRule({
-    when: when,
-    then: then
-  })
 
+  // If previous frame is the same as new one, reset rules
   if (compareArrays(grid, new_grid)) {
-    reset()
+    reset_rules()
   }
-
+  // Also reset it from time to time just in case it gets to a periodic CA
   if (frameCount % 240 === 0) {
-    reset()
+    reset_rules()
   }
 
   grid = new_grid
@@ -122,21 +141,37 @@ function compareArrays(a, b) {
   return equal
 }
 
-// reset grid
+function diffArrays(a, b) {
+  const c = copyArray(emptyGrid)
+  for( let i = 0; i < a.length; i++) {
+    for( let j = 0; j < a[i].length; j++) {
+      c[i][j] = a[i][j] - b[i][j]
+    }
+  }
+  return c
+}
+
+function seed_grid() {
   for (let y = 0; y < rows; y++) {
     grid[y] = []
     for (let x = 0; x < columns; x++) {
-      grid[y][x] = 0
+      grid[y][x] = parseInt(random(0, 2))
     }
   }
+}
 
-function reset() {
+function reset_rules() {
+
+  // reset grid
+  seed_grid()
 
 
   // seed grid
+  /*
   for (let i = 0; i < columns*10; i++) {
     grid[int(random(0, rows))][int(random(0, columns))] = int(random(0, 2))
   }
+  */
 
 
   // reset rule
